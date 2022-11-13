@@ -37,7 +37,7 @@
 
 - All steps of the data pipeline can be seen via Airflow DAG. They are all explained here as well.
 
-- All scripts were written according to my local file/folder locations. But all mentioned scripts can be reached out in this repo.
+- All scripts were written according to my local file/folder locations. But all mentioned scripts can be found in this repo.
 
 To make **Apache Airflow, Docker, Apache Hadoop, Apache Kafka and Apache Zookeeper** available, we should run the following commands (This step may differ on how we installed these locally):
 ```bash
@@ -100,7 +100,7 @@ data. They both do the same job.
 
 All the methods and operations are described with comments and docstrings in both scripts.
 
-We can check `localhost:8088` to see the running jobs while Spark script is running.
+We can check `localhost:8088` to see the resource usage (**YARN**) of the running jobs while Spark script is running.
 
 Written data:
 
@@ -122,7 +122,7 @@ kafka-topics.sh --bootstrap-server localhost:9092 --list
 
 ### Running data-generator:
 
-Instructions on how to install data-generator can be reached out [here](https://github.com/dogukannulu/data-generator)
+Instructions on how to install data-generator can be found [here](https://github.com/dogukannulu/data-generator)
 
 This repo has been forked from @erkansirin78 . Many thanks to him since 
 this script successfully simulates a streaming data.
@@ -135,6 +135,8 @@ Streaming data example:
 ![streaming_data_sample](img/sample_streaming_data.PNG)
 
 ### Writing data to Elasticsearch using Spark Streaming:
+
+We can access to Elasticsearch UI via `localhost:5601`
 
 All the methods and operations are described with comments and docstrings in 
 `spark_to_elasticsearch.py`.
@@ -152,6 +154,8 @@ Logs of the script:
 
 ### Writing data to MinIO using Spark Streaming:
 
+We can access to MinIO UI via `localhost:9001`
+
 All the methods and operations are described with comments and docstrings in 
 `spark_to_minio.py`.
 
@@ -161,6 +165,8 @@ Spark virtualenv.
 
 Sample MinIO data:
 ![sample_minio_data](img/minio_sample.PNG)
+
+**_NOTE:_** We can also check the running Spark jobs via `localhost:4040`
 
 ### Airflow DAG Trigger:
 
