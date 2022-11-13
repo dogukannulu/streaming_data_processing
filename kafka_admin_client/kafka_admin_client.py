@@ -5,8 +5,8 @@ This script creates a Kafka Admin Client and checks if a specific topic exists o
 from kafka.admin import KafkaAdminClient, NewTopic
 
 admin_client = KafkaAdminClient(
-    bootstrap_servers=['localhost:9092'],
-    client_id='dataops_client'
+    bootstrap_servers=['localhost:9092'], #This is the host and port Kafka runs.
+    client_id='kafka_admin_client'
 )
 topic_list = admin_client.list_topics()
 def create_new_topic():
