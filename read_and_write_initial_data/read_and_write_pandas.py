@@ -1,3 +1,7 @@
+"""
+This script gets the zip folder and creates one dataframe from all csv files. Then, saves it to the local.
+"""
+
 import os
 import pandas as pd
 from functools import reduce

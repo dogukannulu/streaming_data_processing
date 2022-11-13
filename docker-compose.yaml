@@ -9,7 +9,7 @@ services:
       - "9000:9000"
       - "9001:9001"
     networks:
-      - vbo
+      - my_docker
     environment:
       MINIO_ACCESS_KEY: "root"
       MINIO_SECRET_KEY: "root12345"
@@ -57,6 +57,6 @@ volumes:
   data:
     driver: local
 networks:
-  vbo:
+  my_docker:
   elastic:
     driver: bridge
