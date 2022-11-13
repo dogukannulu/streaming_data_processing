@@ -1,13 +1,19 @@
+"""
+This script gets the streaming data from Kafka topic, then writes it to Elasticsearch
+"""
+
 import sys
 import warnings
 import traceback
 import logging
 
 logging.basicConfig(level=logging.INFO,
-                    format='%(asctime)s:%(funcName)s:%(levelname)s:%(message)s')
+                    format='%(asctime)s:%(funcName)s:%(levelname)s:%(message)s') # One can see the logs to understand possible errors better. Log levels were determined due to method importance.
 
 warnings.filterwarnings('ignore')
-checkpointDir = "file:///tmp/streaming/kafka_office_input"
+checkpointDir = "file:///tmp/streaming/kafka_office_input" # Historical data is kept here. Can be deleted after each run for development purposes.
+
+# Below creates the format for office_input index.
 office_input_index = {
     "settings": {
         "index": {
@@ -52,26 +58,33 @@ office_input_index = {
 
 
 def create_spark_session():
+    """
+    Creates the Spark Session with suitable configs.
+    """
     from pyspark.sql import SparkSession
     try:
+        # Spark session is established with elasticsearch and kafka jars. Suitable versions can be found in Maven repository.
         spark = (SparkSession.builder
-                 .appName("Streaming Kafka Example")
+                 .appName("Streaming Kafka-Spark")
                  .config("spark.jars.packages", "org.elasticsearch:elasticsearch-spark-30_2.12:7.12.0,org.apache.spark:spark-sql-kafka-0-10_2.12:3.0.0")
                  .config("spark.driver.memory", "2048m")
                  .config("spark.sql.shuffle.partitions", 4)
                  .config("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
                  .getOrCreate())
-        logging.info('Spark session successfully created')
+        logging.info('Spark session created successfully')
     except Exception:
-        traceback.print_exc(file=sys.stderr)
+        traceback.print_exc(file=sys.stderr) # To see traceback of the error.
         logging.error("Couldn't create the spark session")
 
     return spark
 
 
-#SparkConf().getAll()
 def create_initial_dataframe(spark_session):
+    """
+    Reads the streaming data and creates the initial dataframe accordingly.
+    """
     try:
+        # Gets the streaming data from topic office_input.
         df = spark_session \
           .readStream \
           .format("kafka") \
@@ -86,9 +99,12 @@ def create_initial_dataframe(spark_session):
 
 
 def create_final_dataframe(df, spark_session):
+    """
+    Adds column if_movement to initial df, and creates final df.
+    """
     from pyspark.sql.types import IntegerType, FloatType, StringType
     from pyspark.sql import functions as F
-    df2 = df.selectExpr("CAST(value AS STRING)")
+    df2 = df.selectExpr("CAST(value AS STRING)") # Get only the value part of the topic message.
 
     df3 = df2.withColumn("ts_min_bignt", F.split(F.col("value"), ",")[0].cast(IntegerType())) \
         .withColumn("co2", F.split(F.col("value"), ",")[1].cast(FloatType())) \
@@ -98,10 +114,11 @@ def create_final_dataframe(df, spark_session):
         .withColumn("temperature", F.split(F.col("value"), ",")[5].cast(FloatType())) \
         .withColumn("room", F.split(F.col("value"), ",")[6].cast(StringType())) \
         .withColumn("event_ts_min", F.split(F.col("value"), ",")[7].cast(StringType())) \
-        .drop(F.col("value"))
+        .drop(F.col("value")) # Define data types of all columns.
 
     df3.createOrReplaceTempView("df3")
 
+    # Below adds the if_movement column. This column shows the situation of the movement depending on the pir column.
     df4 = spark_session.sql("""
     select
       event_ts_min,
@@ -123,10 +140,13 @@ def create_final_dataframe(df, spark_session):
 
 
 def create_elasticsearch_connection():
+    """
+    Creates the ES connection.
+    """
     from elasticsearch import Elasticsearch
     try:
         es = Elasticsearch("http://localhost:9200")
-        logging.info(f"Connection {es} created succesfully")
+        logging.info(f"Connection {es} created succesfully") # Prints the connection details.
     except Exception as e:
         traceback.print_exc(file=sys.stderr)
         logging.error("Couldn't create the final dataframe")
@@ -135,7 +155,9 @@ def create_elasticsearch_connection():
 
 
 def check_if_index_exists(es):
-
+    """
+    Checks if index office_input exists. If not, creates it and prints message accordingly.
+    """
     if es.indices.exists(index="office_input"):
         print("Index office_input already exists")
         logging.info("Index office_input already exists")
@@ -146,6 +168,9 @@ def check_if_index_exists(es):
 
 
 def start_streaming(df, es):
+    """
+    Starts the streaming to index office_input in elasticsearch.
+    """
     logging.info("Streaming is being started...")
     my_query = (df.writeStream
                    .format("org.elasticsearch.spark.sql")
