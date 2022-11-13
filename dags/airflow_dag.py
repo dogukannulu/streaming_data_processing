@@ -68,4 +68,3 @@ with DAG('streaming_data_processing_dag', default_args=default_args, schedule_in
     [topic_created, topic_exists] >> run_data_generator
     [topic_created, topic_exists] >> spark_write_to_es
     [topic_created, topic_exists] >> spark_write_to_minio
-    
