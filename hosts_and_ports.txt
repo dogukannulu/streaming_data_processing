@@ -1,0 +1,11 @@
+# Deafult ports for applications (UI) :
+
+Elasticsearch -> localhost:5601
+Airflow -> localhost:1502
+MinIO -> localhost:9001
+Spark Jobs -> localhost:4040
+pgAdmin -> localhost:5050
+Kafka -> localhost:9092
+Hadoop Namenode -> localhost:9870
+Hadoop YARN -> localhost:8088/cluster
+Hadoop HDFS -> localhost:9000

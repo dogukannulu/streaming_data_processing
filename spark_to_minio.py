@@ -143,7 +143,7 @@ def start_streaming(df):
                         .outputMode("append")
                         .option('header', 'true')
                         .option("checkpointLocation", checkpointDir)
-                        .option("path", 's3a://dataops/office_input')
+                        .option("path", 's3a://my_bucket/office_input') # The bucket my_bucket can be created via UI
                         .start())
 
     return stream_query.awaitTermination()

@@ -2,4 +2,4 @@
 
 set -e
 source /home/train/venvspark/bin/activate
-python /home/train/PycharmProjects/final_project_spark_write_to_es/spark_write_to_es.py
+python /home/train/PycharmProjects/spark_to_elasticsearch/spark_to_elasticsearch.py
