@@ -100,7 +100,7 @@ def create_initial_dataframe(spark_session):
 
 def create_final_dataframe(df, spark_session):
     """
-    Adds column if_movement to initial df, and creates final df.
+    Modifies the initial dataframe, and creates the final dataframe.
     """
     from pyspark.sql.types import IntegerType, FloatType, StringType
     from pyspark.sql import functions as F
