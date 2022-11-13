@@ -1,7 +1,7 @@
 from airflow import DAG
 from datetime import datetime, timedelta
 
-from admin_client.final_project_kafka_admin_client import create_new_topic
+from kafka_admin_client.kafka_admin_client import create_new_topic
 
 from airflow.operators.dummy import DummyOperator
 from airflow.operators.bash import BashOperator
@@ -19,7 +19,7 @@ default_args = {
 with DAG('streaming_data_processing_dag', default_args=default_args, schedule_interval='@daily', catchup=False) as dag:
 
     download_data = BashOperator(task_id='download_data',
-                                 bash_command='wget -O /home/train/datasets/sensors.zip https://github.com/erkansirin78/datasets/raw/master/sensors_instrumented_in_an_office_building_dataset.zip',
+                                 bash_command='wget -O /home/train/datasets/sensors.zip https://github.com/dogukannulu/datasets/raw/master/sensors_instrumented_in_an_office_building_dataset.zip',
                                  retries=1, retry_delay=timedelta(seconds=15))
 
     unzip_file = BashOperator(task_id='unzip_file',
@@ -36,7 +36,7 @@ with DAG('streaming_data_processing_dag', default_args=default_args, schedule_in
 
     run_spark = BashOperator(task_id='run_spark',
                              bash_command='source ~/venvspark/bin/activate &&'
-                                          'python3 /home/train/PycharmProjects/spark_read_write_final/spark_read_write.py',
+                                          'python3 /home/train/PycharmProjects/read_and_write_initial_data/read_and_write_spark.py',
                              retries=2, retry_delay=timedelta(seconds=15),
                              execution_timeout=timedelta(minutes=20))
 
