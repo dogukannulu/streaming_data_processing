@@ -103,6 +103,7 @@ All the methods and operations are described with comments and docstrings in bot
 We can check `localhost:8088` to see the running jobs while Spark script is running.
 
 Written data:
+
 ![sensors](img/sensors.PNG)
 
 **_NOTE:_** With this step, we have our data ready. You can see it as `sensors.csv` in this repo.
@@ -121,15 +122,16 @@ kafka-topics.sh --bootstrap-server localhost:9092 --list
 
 ### Running data-generator:
 
-Instructions on how to install data-generator can be reached out ![here](https://github.com/dogukannulu/data-generator)
+Instructions on how to install data-generator can be reached out [here](https://github.com/dogukannulu/data-generator)
 
-This repo has been forked from @erkansirin78 . Many many thanks to him since 
+This repo has been forked from @erkansirin78 . Many thanks to him since 
 this script successfully simulates a streaming data.
 
 We can directly run the data-generator script by running `data_generator.sh`. We should use
 the location of data-generator.
 
 Streaming data example:
+
 ![streaming_data_sample](img/sample_streaming_data.PNG)
 
 ### Writing data to Elasticsearch using Spark Streaming:
@@ -138,12 +140,14 @@ All the methods and operations are described with comments and docstrings in
 `spark_to_elasticsearch.py`.
 
 Sample Elasticsearch data:
+
 ![sample_ES_data](img/es_sample_data.PNG)
 
 We can run this script by running `spark_to_elasticsearch.sh`. This script also runs the 
 Spark virtualenv.
 
 Logs of the script:
+
 ![log_sample](img/log_sample.PNG)
 
 ### Writing data to MinIO using Spark Streaming:
@@ -164,6 +168,7 @@ We can trigger the Airflow DAG on `localhost:1502`. Triggering the DAG will do a
 explained data pipeline with one click. 
 
 Airflow DAG:
+
 ![airflow_dag_1](img/dag_1.PNG)
 
 ![airflow_dag_2](img/dag_2.PNG)
