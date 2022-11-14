@@ -1,0 +1,62 @@
+version: '3.8'
+services:
+  minio:
+    container_name: minio
+    image: "minio/minio:RELEASE.2021-10-13T00-23-17Z"
+    volumes:
+      - minio:/data
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    networks:
+      - my_docker
+    environment:
+      MINIO_ACCESS_KEY: "root"
+      MINIO_SECRET_KEY: "root12345"
+    command: server /data --console-address ":9001"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://127.0.0.1:9000/minio/health/live" ]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+  es:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.9.0
+    container_name: es
+    environment:
+      - node.name=es
+      - cluster.name=es-docker-single
+      - discovery.seed_hosts=es
+      - cluster.initial_master_nodes=es
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms1024m -Xmx1024m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - data:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+    networks:
+      - elastic
+
+  kib:
+    image: docker.elastic.co/kibana/kibana:7.9.0
+    depends_on:
+      - es
+    container_name: kib
+    ports:
+      - 5601:5601
+    environment:
+      ELASTICSEARCH_URL: http://es:9200
+      ELASTICSEARCH_HOSTS: http://es:9200
+    networks:
+      - elastic
+volumes:
+  minio:
+  data:
+    driver: local
+networks:
+  my_docker:
+  elastic:
+    driver: bridge

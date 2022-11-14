@@ -1,0 +1,40 @@
+# If we want to get information directly on Elasticsearch, we can run the following commands:
+
+# Create a new index office_input:
+
+PUT /office_input
+
+# Delete the index office_input:
+
+DELETE /office_input
+
+# Get information about all indices:
+
+GET /_cat/indices?v
+
+# Create the data schema for index office_input:
+
+PUT /office_input
+{
+  "settings": {
+    "number_of_shards": 1,
+    "number_of_replicas": 1
+  },
+  "mappings": {
+        "properties": {
+            "event_ts_min": {"type": "date",
+            "format": "yyyy-MM-d hh:mm:ss||yyyy-MM-dd hh:mm:ss||yyyy-MM-dd HH:mm:ss||yyyy-MM-d HH:mm:ss",
+            "ignore_malformed": "true"
+      },
+            "co2": {"type": "float"},
+            "humidity": {"type": "float"},
+            "light": {"type": "float"},
+            "temperature": {"type": "float"},
+            "room": {"type": "keyword"},
+            "pir": {"type": "float"},
+            "if_movement": {"type": "keyword"}
+
+        }
+    }
+}
+}
