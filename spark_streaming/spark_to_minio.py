@@ -27,7 +27,6 @@ def create_spark_session():
                  .config("spark.jars.packages", "org.apache.spark:spark-sql-kafka-0-10_2.12:3.0.0")
                  .getOrCreate())
         logging.info('Spark session successfully created')
-        print(spark.version)
     except Exception as e:
         traceback.print_exc(file=sys.stderr) # To see traceback of the error.
         logging.error(f"Couldn't create the spark session due to exception: {e}")
