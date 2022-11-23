@@ -38,3 +38,12 @@ PUT /office_input
     }
 }
 }
+
+# Delete all the documents inside the index:
+
+POST /office_input/_delete_by_query?
+{
+  "query": {
+    "match_all": {}
+  }
+}
