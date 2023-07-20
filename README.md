@@ -28,7 +28,8 @@
 - Write the streaming data to **MinIO (AWS Object Storage)**.
 - Use **Apache Airflow** to orchestrate the whole data pipeline.
 
-![general_plan](img/plan.jpeg)
+![image](https://github.com/dogukannulu/streaming_data_processing/assets/91257958/3ff99f60-fd23-4252-801d-3f560ec44723)
+
 
 
 ## Steps of the Project
